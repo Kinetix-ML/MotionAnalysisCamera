@@ -26,4 +26,4 @@ MadeWithStone, maxwell@kinetixml.com
 
 ## License
 
-MotionAnalysisCamera is available under the MIT license. See the LICENSE file for more info.
+MotionAnalysisCamera is available under the GPLv3 license. See the LICENSE file for more info.
