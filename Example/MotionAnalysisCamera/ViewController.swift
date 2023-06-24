@@ -7,12 +7,17 @@
 //
 
 import UIKit
+import MotionAnalysisCamera
+import TensorFlowLite
 
 class ViewController: UIViewController {
+    @IBOutlet weak var cameraView: CameraView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        cameraView?.configCameraCapture()
         // Do any additional setup after loading the view, typically from a nib.
+        
     }
 
     override func didReceiveMemoryWarning() {

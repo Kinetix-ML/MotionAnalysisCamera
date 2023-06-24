@@ -28,15 +28,19 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/MadeWithStone/MotionAnalysisCamera.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '15.0'
 
   s.source_files = 'MotionAnalysisCamera/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'MotionAnalysisCamera' => ['MotionAnalysisCamera/Assets/*.png']
-  # }
+  #s.resource_bundles = {
+  #  'MotionAnalysisCamera' => ['MotionAnalysisCamera/**/*.xib']
+  #}
+  s.resources = 'MotionAnalysisCamera/Assets/**/*'
+  s.resource_bundle = {'MotionAnalysisCamera' => ['MotionAnalysisCamera/Assets/**/*.{storyboard,xib,png,jsbundle,meta,tflite}']}
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'TensorFlowLiteSwift', '~> 2.4.0'
+  s.static_framework = true
 end

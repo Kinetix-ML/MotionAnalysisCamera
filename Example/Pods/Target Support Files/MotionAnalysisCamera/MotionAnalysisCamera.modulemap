@@ -1,6 +1,0 @@
-framework module MotionAnalysisCamera {
-  umbrella header "MotionAnalysisCamera-umbrella.h"
-
-  export *
-  module * { export * }
-}
