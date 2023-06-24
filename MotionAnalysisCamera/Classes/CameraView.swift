@@ -12,20 +12,11 @@ import CoreML
 import Vision
 
 public class CameraView: UIView {
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-    
-    // init overlay view
-    //@IBOutlet weak var overlayView: OverlayView!
+    // init overlay objects
+    public var overlayColor = UIColor.white.cgColor
     
     // init camera objects
-    private var cameraFeedManager: CameraFeedManager!
+    public var cameraFeedManager: CameraFeedManager!
     
     // init ML objects
     private var poseEstimator: PoseEstimator!
@@ -33,36 +24,31 @@ public class CameraView: UIView {
     private var minimumScore: Float32 = 0.2
     
     // init logic objects
-    var pts: Person?
-    let widthMargin: CGFloat = 0.15
-    let heightMargin: CGFloat = 0.15
-    var time0 = (Date().timeIntervalSince1970*1000.0).rounded()
-    var collecting = false
+    private var pts: Person?
+    private var time0 = (Date().timeIntervalSince1970*1000.0).rounded()
+    private var collecting = false
     
     // init threading objects
-    let queue = DispatchQueue(label: "serial_queue", qos: .userInitiated)
-    let frameWriterQueue = DispatchQueue(label: "frame-writer-queue", qos: .userInitiated)
-    let frameParserQueue = DispatchQueue(label: "frame-parser-queue", qos: .userInteractive)
-    let frameDisplayQueue = DispatchQueue(label: "frame-display-queue", qos: .userInteractive)
-    let frameMiscQueue = DispatchQueue(label: "frame-misc-queue", qos: .userInitiated)
-    let backgroundQueue = DispatchQueue(label: "background-queue", qos: .background)
+    private let queue = DispatchQueue(label: "serial_queue", qos: .userInitiated)
+    private let frameWriterQueue = DispatchQueue(label: "frame-writer-queue", qos: .userInitiated)
+    private let frameParserQueue = DispatchQueue(label: "frame-parser-queue", qos: .userInteractive)
+    private let frameDisplayQueue = DispatchQueue(label: "frame-display-queue", qos: .userInteractive)
+    private let frameMiscQueue = DispatchQueue(label: "frame-misc-queue", qos: .userInitiated)
+    private let backgroundQueue = DispatchQueue(label: "background-queue", qos: .background)
     
     // init asset writer objects
-    var assetWriter: AVAssetWriter?
-    var assetWriterAdaptor: AVAssetWriterInputPixelBufferAdaptor?
-    var assetWriterInput: AVAssetWriterInput?
-    var assetStartTime: Double?
-    var outputURL: URL?
-    var framesPerSecond = 240
+    private var assetWriter: AVAssetWriter?
+    private var assetWriterAdaptor: AVAssetWriterInputPixelBufferAdaptor?
+    private var assetWriterInput: AVAssetWriterInput?
+    private var assetStartTime: Double?
+    private var outputURL: URL?
+    private var framesPerSecond = 240
     
-    // init boundry detection objects
-    var inBounds = true
-    var timeInBounds = 0
-    var boundsTimer: Timer?
-    var countDown = 3
-
+    // init callback functions
+    public var processFrame: (_ pts: [KeyPoint], _ imageSize: (CGFloat, CGFloat)) -> () = {pts,imageSize in print("Configure the Frame Processor")}
     
-    public func configCameraCapture() {
+    public func configureCamera() {
+        // load model
         do {
             self.poseEstimator = try MoveNet(
                 threadCount: 1,
@@ -71,6 +57,8 @@ public class CameraView: UIView {
         } catch  {
             print(error)
         }
+        
+        // start camera feed
         cameraFeedManager = CameraFeedManager(preview: self)
         cameraFeedManager.startRunning()
         cameraFeedManager.delegate = self
@@ -116,6 +104,16 @@ public class CameraView: UIView {
             //close everything
         }
     }
+    
+    func writeFrameToSess(pixelBuffer: CVPixelBuffer, frameTime: CMTime) {
+        DispatchQueue.main.async {
+            if self.assetWriterInput != nil && self.assetWriterInput!.isReadyForMoreMediaData {
+                print("[Writing Session] Adding Frame \(frameTime)")
+                //append the contents of the pixelBuffer at the correct time
+                print(self.assetWriterAdaptor!.append(pixelBuffer, withPresentationTime: frameTime))
+            }
+        }
+    }
 
 }
 
@@ -128,7 +126,7 @@ extension CameraView: CameraFeedManagerDelegate {
         DispatchQueue.main.async {
             //self.overlayView.image = image
             print("pts: \(self.pts)")
-            self.drawShape(image: image, person: self.pts, inBounds: self.inBounds, margins: (self.widthMargin, self.heightMargin))
+            self.drawShape(image: image, person: self.pts)
             var time1 = (Date().timeIntervalSince1970*1000.0).rounded()
             print("Time new pts drawn: \(time1-self.time0)")
             self.time0 = time1
@@ -160,7 +158,7 @@ extension CameraView: CameraFeedManagerDelegate {
                 }
                 if self.assetWriter != nil {
                     let newFrameTime = (Date().timeIntervalSince1970 - self.assetStartTime!)*Double(self.framesPerSecond)
-                    //self.writeFrameToSess(pixelBuffer: pixelBuffer, frameTime: CMTimeMake(value: Int64(round(newFrameTime)), timescale: Int32(self.framesPerSecond)))
+                    self.writeFrameToSess(pixelBuffer: pixelBuffer, frameTime: CMTimeMake(value: Int64(round(newFrameTime)), timescale: Int32(self.framesPerSecond)))
                     
                 }
             }
@@ -177,13 +175,6 @@ extension CameraView: CameraFeedManagerDelegate {
                     print("result score: \(result.score)")
                     if result.score < self.minimumScore {
                         self.pts = nil
-                        //self.pts = nil
-                        if !self.collecting && self.boundsTimer != nil {
-                            self.boundsTimer?.invalidate()
-                            DispatchQueue.main.async {
-                                //self.resetCountdownTimer()
-                            }
-                        }
                         return
                     } else {
                         if self.cameraFeedManager.input?.device.position == AVCaptureDevice.Position.front {
@@ -237,7 +228,7 @@ extension CameraView: CameraFeedManagerDelegate {
                 
                 if self.collecting {
                     self.frameParserQueue.async {
-                        //self.processNewFrame(pts: pts, height: imageHeight, width: imageWidth)
+                        self.processFrame(pts, (imageWidth, imageHeight))
                     }
                 }
                 
@@ -249,21 +240,6 @@ extension CameraView: CameraFeedManagerDelegate {
                     
                     let totalTime = String(format: "%.2fms",
                                            times.total * 1000)
-                    
-//                    self.inBounds = self.ptsInMargin(pts: result.keyPoints, height: imageHeight, width: imageWidth)
-//                    if self.inBounds && !self.collecting && self.boundsTimer == nil {
-//                        self.countdownLbl.isHidden = false
-//                        self.countdownLbl.text = String(self.countDown)
-//                        self.boundsTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.countDownTimer), userInfo: nil, repeats: true)
-//                    }
-//                    if !self.inBounds && !self.collecting && self.boundsTimer != nil {
-//                        self.resetCountdownTimer()
-//                    }
-//                    
-//                    if !self.inBounds {
-//                        self.freeSwingsLbl.isHidden = false
-//                        self.freeSwingsLbl.text = "Please move inside the rectangle."
-//                    }
                 }
                 
             } catch {

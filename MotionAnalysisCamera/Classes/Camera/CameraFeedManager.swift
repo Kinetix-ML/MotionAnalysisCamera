@@ -29,7 +29,7 @@ protocol CameraFeedManagerDelegate: AnyObject {
 }
 
 /// Manage the camera pipeline.
-final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
   /// Delegate to receive the frames captured by the device's camera.
   var delegate: CameraFeedManagerDelegate?
@@ -228,7 +228,7 @@ final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBufferDel
     }
 
   // MARK: Methods of the AVCaptureVideoDataOutputSampleBufferDelegate
-  func captureOutput(
+    public func captureOutput(
     _ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
     from connection: AVCaptureConnection
   ) {

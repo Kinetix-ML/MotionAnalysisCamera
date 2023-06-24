@@ -41,7 +41,7 @@ extension CameraView {
         (from: BodyPart.rightKnee, to: BodyPart.rightAnkle),
     ]
     
-    func drawShape(image: UIImage, person: Person?, inBounds: Bool, margins: (CGFloat, CGFloat)) {
+    func drawShape(image: UIImage, person: Person?) {
         for (index, element) in self.layer.sublayers!.enumerated() {
             if (index > 0) {element.removeFromSuperlayer()}
         }
@@ -58,29 +58,17 @@ extension CameraView {
         let xOffset = (imgSize.width - xViewable) / 2
 
         // draw person
-        drawShapeDots(dots: strokes.dots, inBounds: inBounds, scale: scale, xOffset: xOffset)
-        drawShapeLines(lines: strokes.lines, inBounds: inBounds, scale: scale, xOffset: xOffset)
-        
-        // draw bounds box
-        if inBounds { return }
-        let shape = CAShapeLayer()
-        self.layer.addSublayer(shape)
-        shape.strokeColor = inBounds ? UIColor.white.cgColor : UIColor.red.cgColor
-        shape.fillColor = UIColor.white.withAlphaComponent(0.0).cgColor
-        shape.lineWidth = 5.0
-        
-        let rect = CGRect(x: ((imgSize.width*margins.0)-xOffset)*scale, y: imgSize.height*margins.1*scale, width: (imgSize.width-imgSize.width*margins.0*2)*scale, height: (imgSize.height-imgSize.height*margins.1*2)*scale)
-        shape.path = UIBezierPath(roundedRect: rect, byRoundingCorners:.allCorners, cornerRadii: CGSize(width: 25.0, height: 25.0)).cgPath
-        
+        drawShapeDots(dots: strokes.dots, scale: scale, xOffset: xOffset)
+        drawShapeLines(lines: strokes.lines, scale: scale, xOffset: xOffset)
     }
     
-    private func drawShapeDots(dots: [CGPoint], inBounds: Bool, scale: CGFloat, xOffset: CGFloat) {
+    private func drawShapeDots(dots: [CGPoint], scale: CGFloat, xOffset: CGFloat) {
         
         for dot in dots {
             let shape = CAShapeLayer()
             self.layer.addSublayer(shape)
-            shape.strokeColor = inBounds ? UIColor.white.cgColor : UIColor.red.cgColor
-            shape.fillColor = inBounds ? UIColor.white.cgColor : UIColor.red.cgColor
+            shape.strokeColor = overlayColor
+            shape.fillColor = overlayColor
 
             let dotRect = CGRect(
                 x: (dot.x - xOffset) * scale - Config.dot.radius / 2, y: dot.y * scale - Config.dot.radius / 2,
@@ -92,12 +80,12 @@ extension CameraView {
         }
     }
     
-    private func drawShapeLines(lines: [Line], inBounds: Bool, scale: CGFloat, xOffset: CGFloat) {
+    private func drawShapeLines(lines: [Line], scale: CGFloat, xOffset: CGFloat) {
         for line in lines {
             let shape = CAShapeLayer()
             self.layer.addSublayer(shape)
-            shape.strokeColor = inBounds ? UIColor.white.cgColor : UIColor.red.cgColor
-            shape.fillColor = inBounds ? UIColor.white.cgColor : UIColor.red.cgColor
+            shape.strokeColor = overlayColor
+            shape.fillColor = overlayColor
             shape.lineWidth = Config.line.width
             
             let path = UIBezierPath()
