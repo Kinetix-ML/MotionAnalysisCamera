@@ -1,6 +1,7 @@
 PODS:
-  - MotionAnalysisCamera (0.1.0):
-    - TensorFlowLiteSwift (~> 2.4.0)
+  - MotionAnalysisCamera (0.0.1):
+    - TensorFlowLiteSwift/CoreML (~> 2.4.0)
+    - TensorFlowLiteSwift/Metal (~> 2.4.0)
   - TensorFlowLiteC (2.4.0):
     - TensorFlowLiteC/Core (= 2.4.0)
   - TensorFlowLiteC/Core (2.4.0)
@@ -8,8 +9,6 @@ PODS:
     - TensorFlowLiteC/Core
   - TensorFlowLiteC/Metal (2.4.0):
     - TensorFlowLiteC/Core
-  - TensorFlowLiteSwift (2.4.0):
-    - TensorFlowLiteSwift/Core (= 2.4.0)
   - TensorFlowLiteSwift/Core (2.4.0):
     - TensorFlowLiteC (= 2.4.0)
   - TensorFlowLiteSwift/CoreML (2.4.0):
@@ -34,7 +33,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  MotionAnalysisCamera: a19c310743afdf497506f3fdb6f5f647bd158254
+  MotionAnalysisCamera: adc97434a0b5374f13e660db7aee1883217f480b
   TensorFlowLiteC: 09f8ac75a76caeadb19bcfa694e97454cc1ecf87
   TensorFlowLiteSwift: f062dc1178120100d825d7799fd9f115b4a37fee
 
