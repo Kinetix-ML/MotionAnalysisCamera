@@ -41,7 +41,7 @@ public class CameraView: UIView {
     private var assetWriterAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     private var assetWriterInput: AVAssetWriterInput?
     private var assetStartTime: Double?
-    private var outputURL: URL?
+    private var outputURL: URL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(Date().ISO8601Format()).mov"))!
     private var framesPerSecond = 240
     
     // init callback functions
@@ -63,6 +63,27 @@ public class CameraView: UIView {
         cameraFeedManager.startRunning()
         cameraFeedManager.delegate = self
     }
+    
+    public func startRecording() {
+        self.collecting = true
+    }
+    
+    @available(*, renamed: "endRecording()")
+    public func endRecording(completion: @escaping (URL) -> Void) {
+        self.collecting = false
+        endFrameWriter() {
+            completion(self.outputURL)
+        }
+    }
+    
+    public func endRecording() async -> URL {
+        return await withCheckedContinuation { continuation in
+            endRecording() { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+    
     
     func setupVideoWriter(pixelbuffer: CVPixelBuffer) {
         let assetWriterSettings = [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey : pixelbuffer.size.width, AVVideoHeightKey: pixelbuffer.size.height] as [String : Any]
@@ -98,19 +119,25 @@ public class CameraView: UIView {
             assetwriter.startSession(atSourceTime: CMTime.zero)
             assetWriter = assetwriter
             outputURL = outputMovieURL
-            //determine how many frames we need to generate
-            
-            //duration is the number of seconds for the final video
-            //close everything
         }
     }
     
     func writeFrameToSess(pixelBuffer: CVPixelBuffer, frameTime: CMTime) {
         DispatchQueue.main.async {
             if self.assetWriterInput != nil && self.assetWriterInput!.isReadyForMoreMediaData {
-                print("[Writing Session] Adding Frame \(frameTime)")
-                //append the contents of the pixelBuffer at the correct time
+                // append the contents of the pixelBuffer at the correct time
                 print(self.assetWriterAdaptor!.append(pixelBuffer, withPresentationTime: frameTime))
+            }
+        }
+    }
+    
+    func endFrameWriter(completion: @escaping () -> Void) {
+        if assetWriter != nil && assetWriterInput != nil {
+            assetWriterInput!.markAsFinished()
+            DispatchQueue.main.async {
+                self.assetWriter?.finishWriting {
+                    completion()
+                }
             }
         }
     }
@@ -125,11 +152,7 @@ extension CameraView: CameraFeedManagerDelegate {
         let image = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer))
         DispatchQueue.main.async {
             //self.overlayView.image = image
-            print("pts: \(self.pts)")
             self.drawShape(image: image, person: self.pts)
-            var time1 = (Date().timeIntervalSince1970*1000.0).rounded()
-            print("Time new pts drawn: \(time1-self.time0)")
-            self.time0 = time1
             self.runModel(pixelBuffer, image)
         }
         
@@ -138,16 +161,12 @@ extension CameraView: CameraFeedManagerDelegate {
     
     /// Run pose estimation on the input frame from the camera.
     private func runModel(_ pixelBuffer: CVPixelBuffer, _ image: UIImage) {
-        print("running modal")
         // Guard to make sure that there's only 1 frame process at each moment.
         guard !isRunning else { return }
-        print("model isnt running")
         
         // Guard to make sure that the pose estimator is already initialized.
         guard let estimator = poseEstimator else { return }
         
-        
-        print("Running Modal")
         // Run inference on a serial queue to avoid race condition.
         queue.async {
             self.isRunning = true
@@ -167,12 +186,10 @@ extension CameraView: CameraFeedManagerDelegate {
             // Run pose estimation
             do {
                 
-                    let t0 = (Date().timeIntervalSince1970*1000.0).rounded()
-                let (result, times) = try estimator.estimateSinglePose(
+                let (result, _) = try estimator.estimateSinglePose(
                     on: pixelBuffer)
                 self.frameMiscQueue.async {
                     // If score is too low, clear result remaining in the overlayView.
-                    print("result score: \(result.score)")
                     if result.score < self.minimumScore {
                         self.pts = nil
                         return
@@ -198,48 +215,8 @@ extension CameraView: CameraFeedManagerDelegate {
                 let imageWidth = pixelBuffer.size.width
                 let imageHeight = pixelBuffer.size.height
                 
-                var pts = result.keyPoints
-                DispatchQueue.main.async {
-                    //if self.handedSeg.selectedSegmentIndex == 1 {
-                        self.frameMiscQueue.async {
-                            
-                            for (i, pt) in pts.enumerated() {
-                                let newPt = CGPoint(x: imageWidth-pt.coordinate.x, y: pt.coordinate.y)
-                                pts[i] = KeyPoint(bodyPart: pt.bodyPart, coordinate: newPt, score: pt.score)
-                            }
-                            
-                            // swap left and right point indexes to complete the keypoint mirror
-                            pts = pts.enumerated().map { (index, element) in
-                                // leave the first point, the nose, as is
-                                if index == 0 {
-                                    return element
-                                } else if index % 2 == 1 { // swap odd points up one index with their even counter parts
-                                    return pts[index + 1]
-                                } else if index % 2 == 0 { // swap even points down one index with their odd counter parts
-                                    return pts[index - 1]
-                                }
-                                else {
-                                    return element
-                                }
-                            }
-                        }
-                    //}
-                }
-                
-                if self.collecting {
-                    self.frameParserQueue.async {
-                        self.processFrame(pts, (imageWidth, imageHeight))
-                    }
-                }
-                
-                // Visualize the pose estimation result.
-                let t1 = (Date().timeIntervalSince1970*1000.0).rounded()
-                print("Frame Process Time: \(t1-t0) FPS: \(1/(t1-t0))")
-                
-                DispatchQueue.main.async {
-                    
-                    let totalTime = String(format: "%.2fms",
-                                           times.total * 1000)
+                self.frameParserQueue.async {
+                    self.processFrame(result.keyPoints, (imageWidth, imageHeight))
                 }
                 
             } catch {

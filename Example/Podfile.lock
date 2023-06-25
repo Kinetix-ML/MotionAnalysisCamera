@@ -33,7 +33,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  MotionAnalysisCamera: adc97434a0b5374f13e660db7aee1883217f480b
+  MotionAnalysisCamera: c01ac2506da87ea8230c5363b11603aea2ed00b7
   TensorFlowLiteC: 09f8ac75a76caeadb19bcfa694e97454cc1ecf87
   TensorFlowLiteSwift: f062dc1178120100d825d7799fd9f115b4a37fee
 
