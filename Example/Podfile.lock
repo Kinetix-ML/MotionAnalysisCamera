@@ -1,5 +1,5 @@
 PODS:
-  - KMLDataTypes (0.1.5)
+  - KMLDataTypes (0.1.6)
   - MotionAnalysisCamera (0.0.2):
     - KMLDataTypes
     - TensorFlowLiteSwift/CoreML (~> 2.4.0)
@@ -39,11 +39,11 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   KMLDataTypes:
-    :commit: b21d65558857a71c3df7965eba76802b6938928b
+    :commit: df628f32cef89ff4c56102191ac770856eb72c58
     :git: https://www.github.com/Kinetix-ML/KMLDataTypes
 
 SPEC CHECKSUMS:
-  KMLDataTypes: bfe8194d0c6e3273f26f83ae151d822ebdf8b60d
+  KMLDataTypes: 52c71b00f1d5c15f4abf5a0a0bf061f7d3428e53
   MotionAnalysisCamera: 8623e2d9d099c610ceea10455c848ddb4c0b991e
   TensorFlowLiteC: 09f8ac75a76caeadb19bcfa694e97454cc1ecf87
   TensorFlowLiteSwift: f062dc1178120100d825d7799fd9f115b4a37fee

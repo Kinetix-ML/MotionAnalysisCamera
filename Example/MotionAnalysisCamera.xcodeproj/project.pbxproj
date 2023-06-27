@@ -43,7 +43,7 @@
 		607FACE51AFB9204008FA782 /* MotionAnalysisCamera_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MotionAnalysisCamera_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		AB2C4A1857992757B3F5973C /* MotionAnalysisCamera.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = MotionAnalysisCamera.podspec; path = ../MotionAnalysisCamera.podspec; sourceTree = "<group>"; };
+		AB2C4A1857992757B3F5973C /* MotionAnalysisCamera.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = MotionAnalysisCamera.podspec; path = ../MotionAnalysisCamera.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		BB28EE922A46BDFD00028111 /* Test View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "Test View.xib"; sourceTree = "<group>"; };
 		DC214C0E514FCA8A9DBABB1A /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		F69E4AC73F7322F582ACEF1C /* Pods-MotionAnalysisCamera_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MotionAnalysisCamera_Tests.debug.xcconfig"; path = "Target Support Files/Pods-MotionAnalysisCamera_Tests/Pods-MotionAnalysisCamera_Tests.debug.xcconfig"; sourceTree = "<group>"; };
