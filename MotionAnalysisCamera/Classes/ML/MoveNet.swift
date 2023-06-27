@@ -17,6 +17,7 @@
 import Accelerate
 import Foundation
 import TensorFlowLite
+import KMLDataTypes
 
 /// A wrapper to run pose estimation using MoveNet models
 final class MoveNet: PoseEstimator {

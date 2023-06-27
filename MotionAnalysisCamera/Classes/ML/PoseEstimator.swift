@@ -14,6 +14,7 @@
 // =============================================================================
 
 import UIKit
+import KMLDataTypes
 
 /// Protocol to  run a pose estimator.
 protocol PoseEstimator {

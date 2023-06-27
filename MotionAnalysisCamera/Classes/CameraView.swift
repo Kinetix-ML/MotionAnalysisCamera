@@ -10,6 +10,7 @@ import UIKit
 import os
 import CoreML
 import Vision
+import KMLDataTypes
 
 public class CameraView: UIView {
     // init overlay objects

@@ -15,6 +15,7 @@
 
 import UIKit
 import os
+import KMLDataTypes
 
 /// Custom view to visualize the pose estimation result on top of the input image.
 extension CameraView {
