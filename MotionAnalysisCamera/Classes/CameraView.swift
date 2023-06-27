@@ -127,19 +127,21 @@ public class CameraView: UIView {
         DispatchQueue.main.async {
             if self.assetWriterInput != nil && self.assetWriterInput!.isReadyForMoreMediaData {
                 // append the contents of the pixelBuffer at the correct time
-                print(self.assetWriterAdaptor!.append(pixelBuffer, withPresentationTime: frameTime))
+                self.assetWriterAdaptor!.append(pixelBuffer, withPresentationTime: frameTime)
             }
         }
     }
     
     func endFrameWriter(completion: @escaping () -> Void) {
-        if assetWriter != nil && assetWriterInput != nil {
+        if assetWriter != nil && assetWriterInput != nil && assetWriter?.status == .writing {
             assetWriterInput!.markAsFinished()
             DispatchQueue.main.async {
                 self.assetWriter?.finishWriting {
                     completion()
                 }
             }
+        } else {
+            completion()
         }
     }
 
