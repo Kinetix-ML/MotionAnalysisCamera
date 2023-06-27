@@ -18,7 +18,7 @@ import Accelerate.vImage
 import UIKit
 
 /// Delegate to receive the frames captured from the device's camera.
-protocol CameraFeedManagerDelegate: AnyObject {
+public protocol CameraFeedManagerDelegate: AnyObject {
 
   /// Callback method that receives frames from the camera.
   /// - Parameters:
@@ -32,20 +32,20 @@ protocol CameraFeedManagerDelegate: AnyObject {
 public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
   /// Delegate to receive the frames captured by the device's camera.
-  var delegate: CameraFeedManagerDelegate?
-    var input: AVCaptureDeviceInput?
-    var zoom = 0 // 0: 0.5x, 1: 1x, 2: 2x
-    var ultra = false
-    var backZoomOptions: [CGFloat] = [1.0, 2.0, 3.0]
-    var frontZoomOptions: [CGFloat] = [1.0, 2.0, 3.0]
-    var zoomBtnText = ""
-    var backCamera: AVCaptureDevice?
-    var frontCamera: AVCaptureDevice?
-    var backCameraUltra: AVCaptureDevice?
-    var frontCameraUltra: AVCaptureDevice?
-    var videoPreviewLayer: AVCaptureVideoPreviewLayer?
-    let videoOutput = AVCaptureVideoDataOutput()
-    var preview: UIView!
+    public var delegate: CameraFeedManagerDelegate?
+    public var input: AVCaptureDeviceInput?
+    public var zoom = 0 // 0: 0.5x, 1: 1x, 2: 2x
+    public var ultra = false
+    public var backZoomOptions: [CGFloat] = [1.0, 2.0, 3.0]
+    public var frontZoomOptions: [CGFloat] = [1.0, 2.0, 3.0]
+    public var zoomBtnText = ""
+    public var backCamera: AVCaptureDevice?
+    public var frontCamera: AVCaptureDevice?
+    public var backCameraUltra: AVCaptureDevice?
+    public var frontCameraUltra: AVCaptureDevice?
+    public var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    public let videoOutput = AVCaptureVideoDataOutput()
+    public var preview: UIView!
 
     init(preview: UIView) {
     super.init()
@@ -55,18 +55,18 @@ public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBu
   }
 
   /// Start capturing frames from the camera.
-  func startRunning() {
+public func startRunning() {
     DispatchQueue.global(qos: .background).async {
         self.captureSession.startRunning()
     }
   }
 
   /// Stop capturing frames from the camera.
-  func stopRunning() {
+    public func stopRunning() {
     captureSession.stopRunning()
   }
 
-  let captureSession = AVCaptureSession()
+    public let captureSession = AVCaptureSession()
 
   /// Initialize the capture session.
   private func configureSession() {
@@ -170,7 +170,7 @@ public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBu
         device.unlockForConfiguration()
     }
     
-    func changeCamera() {
+    public func changeCamera() {
         captureSession.removeInput(input!)
         do {
             if (input!.device.position == .back) {
@@ -188,7 +188,7 @@ public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBu
     }
     
     
-    func setZoom(val: CGFloat, device: AVCaptureDevice) {
+    public func setZoom(val: CGFloat, device: AVCaptureDevice) {
         
         do {
             try device.lockForConfiguration()
@@ -198,7 +198,7 @@ public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBu
         }
     }
     
-    func changeZoom() {
+    public func changeZoom() {
         zoom += 1
         if (input!.device.position == .front) {
             zoom = zoom % frontZoomOptions.count
@@ -219,7 +219,7 @@ public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBu
                 
     }
     
-    func updateZoomLabel() {
+    public func updateZoomLabel() {
         if (input!.device.position == .front) {
             zoomBtnText = "\(frontZoomOptions[zoom])"
         } else {
