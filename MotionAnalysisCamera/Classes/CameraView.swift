@@ -147,7 +147,7 @@ public class CameraView: UIView {
 
 // MARK: - CameraFeedManagerDelegate Methods
 extension CameraView: CameraFeedManagerDelegate {
-    func cameraFeedManager(
+    public func cameraFeedManager(
         _ cameraFeedManager: CameraFeedManager, didOutput pixelBuffer: CVPixelBuffer
     ) {
         let image = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer))
@@ -161,7 +161,7 @@ extension CameraView: CameraFeedManagerDelegate {
     
     
     /// Run pose estimation on the input frame from the camera.
-    private func runModel(_ pixelBuffer: CVPixelBuffer, _ image: UIImage) {
+    public func runModel(_ pixelBuffer: CVPixelBuffer, _ image: UIImage) {
         // Guard to make sure that there's only 1 frame process at each moment.
         guard !isRunning else { return }
         
