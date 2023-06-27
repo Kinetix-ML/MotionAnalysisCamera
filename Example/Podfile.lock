@@ -1,5 +1,7 @@
 PODS:
-  - MotionAnalysisCamera (0.0.1):
+  - KMLDataTypes (0.1.5)
+  - MotionAnalysisCamera (0.0.2):
+    - KMLDataTypes
     - TensorFlowLiteSwift/CoreML (~> 2.4.0)
     - TensorFlowLiteSwift/Metal (~> 2.4.0)
   - TensorFlowLiteC (2.4.0):
@@ -19,6 +21,7 @@ PODS:
     - TensorFlowLiteSwift/Core (= 2.4.0)
 
 DEPENDENCIES:
+  - KMLDataTypes (from `https://www.github.com/Kinetix-ML/KMLDataTypes`)
   - MotionAnalysisCamera (from `../`)
   - TensorFlowLiteSwift/CoreML (~> 2.4.0)
   - TensorFlowLiteSwift/Metal (~> 2.4.0)
@@ -29,14 +32,22 @@ SPEC REPOS:
     - TensorFlowLiteSwift
 
 EXTERNAL SOURCES:
+  KMLDataTypes:
+    :git: https://www.github.com/Kinetix-ML/KMLDataTypes
   MotionAnalysisCamera:
     :path: "../"
 
+CHECKOUT OPTIONS:
+  KMLDataTypes:
+    :commit: b21d65558857a71c3df7965eba76802b6938928b
+    :git: https://www.github.com/Kinetix-ML/KMLDataTypes
+
 SPEC CHECKSUMS:
-  MotionAnalysisCamera: c01ac2506da87ea8230c5363b11603aea2ed00b7
+  KMLDataTypes: bfe8194d0c6e3273f26f83ae151d822ebdf8b60d
+  MotionAnalysisCamera: 8623e2d9d099c610ceea10455c848ddb4c0b991e
   TensorFlowLiteC: 09f8ac75a76caeadb19bcfa694e97454cc1ecf87
   TensorFlowLiteSwift: f062dc1178120100d825d7799fd9f115b4a37fee
 
-PODFILE CHECKSUM: 42673614ae61d7918bf10c461f0ec9ed18d3c0d6
+PODFILE CHECKSUM: 6cbc973245372aaedecfbc076eb945a0bd8e787d
 
 COCOAPODS: 1.11.3

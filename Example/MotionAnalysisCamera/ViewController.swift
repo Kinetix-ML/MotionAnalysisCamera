@@ -10,6 +10,7 @@ import UIKit
 import MotionAnalysisCamera
 import TensorFlowLite
 
+
 class ViewController: UIViewController {
     @IBOutlet weak var cameraView: CameraView?
 
