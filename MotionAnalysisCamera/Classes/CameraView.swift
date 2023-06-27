@@ -27,7 +27,7 @@ public class CameraView: UIView {
     // init logic objects
     private var pts: Person?
     private var time0 = (Date().timeIntervalSince1970*1000.0).rounded()
-    private var collecting = false
+    public var collecting = false
     
     // init threading objects
     private let queue = DispatchQueue(label: "serial_queue", qos: .userInitiated)
