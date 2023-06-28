@@ -73,9 +73,9 @@ public class CameraView: UIView {
     public func endRecording(completion: @escaping (URL) -> Void) {
         self.collecting = false
         endFrameWriter() {
+            self.assetWriter = nil
             completion(self.outputURL)
         }
-        assetWriter = nil
     }
     
     public func endRecording() async -> URL {
