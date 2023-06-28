@@ -1,6 +1,6 @@
 PODS:
   - KMLDataTypes (0.1.6)
-  - MotionAnalysisCamera (0.0.2):
+  - MotionAnalysisCamera (0.0.7):
     - KMLDataTypes
     - TensorFlowLiteSwift/CoreML (~> 2.4.0)
     - TensorFlowLiteSwift/Metal (~> 2.4.0)
@@ -44,10 +44,10 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   KMLDataTypes: 52c71b00f1d5c15f4abf5a0a0bf061f7d3428e53
-  MotionAnalysisCamera: 8623e2d9d099c610ceea10455c848ddb4c0b991e
+  MotionAnalysisCamera: f5fbfdb502dba84b36232d6efc0a4ce1f6b78c62
   TensorFlowLiteC: 09f8ac75a76caeadb19bcfa694e97454cc1ecf87
   TensorFlowLiteSwift: f062dc1178120100d825d7799fd9f115b4a37fee
 
 PODFILE CHECKSUM: 6cbc973245372aaedecfbc076eb945a0bd8e787d
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
