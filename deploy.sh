@@ -2,7 +2,7 @@
 
 # Change version in podspec
 
-sed "11s/'[^'][^']*'/$1/" MotionAnalysisCamera.podspec  > tmpfile ; mv tmpfile MotionAnalysisCamera.podspec
+sed "11s/'[^'][^']*'/'$1'/" MotionAnalysisCamera.podspec  > tmpfile ; mv tmpfile MotionAnalysisCamera.podspec
 
 # Commit and Push
 git add .
