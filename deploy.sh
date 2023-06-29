@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change version in podspec
-sed "11s/'[^'][^']*'/$1/" MotionAnalysisCamera.podspec
+sed -i "11s/'[^'][^']*'/$1/" MotionAnalysisCamera.podspec
 
 # Commit and Push
 git add .
