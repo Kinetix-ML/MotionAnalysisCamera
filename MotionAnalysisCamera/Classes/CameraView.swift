@@ -66,6 +66,7 @@ public class CameraView: UIView {
     }
     
     public func startRecording() {
+        self.assetWriter = nil
         self.collecting = true
     }
     
@@ -73,7 +74,6 @@ public class CameraView: UIView {
     public func endRecording(completion: @escaping (URL) -> Void) {
         self.collecting = false
         endFrameWriter() {
-            self.assetWriter = nil
             completion(self.outputURL)
         }
     }
@@ -88,6 +88,7 @@ public class CameraView: UIView {
     
     
     func setupVideoWriter(pixelbuffer: CVPixelBuffer) {
+        print("[MotionAnalysisCamera] Setting up Video Asset Writer")
         let assetWriterSettings = [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey : pixelbuffer.size.width, AVVideoHeightKey: pixelbuffer.size.height] as [String : Any]
         //generate a file url to store the video. some_image.jpg becomes some_image.mov
         let imageNameRoot = "\(Date().ISO8601Format())"
