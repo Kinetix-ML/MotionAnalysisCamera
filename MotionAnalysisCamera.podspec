@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MotionAnalysisCamera'
-  s.version          = '0.0.14'
+  s.version          = '0.0.15'
   s.summary          = 'A camera API for high frame rate motion analysis using keypoint detection.'
 
 # This description is used to generate tags and improve search results.

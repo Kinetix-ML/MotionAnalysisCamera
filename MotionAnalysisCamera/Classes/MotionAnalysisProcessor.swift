@@ -27,34 +27,35 @@ public class MotionAnalysisProcessor {
         return person
     }
     
-//    public func processVideo(videoURL: URL) throws {
-//        var frames = [KPFrame]()
-//        
-//        let videoAsset = AVAsset(url: videoURL)
-//        
-//        let keyPointProcessingGroup = DispatchGroup()
-//        do {
-//            let reader = try AVAssetReader(asset: videoAsset)
-//            //AVAssetReader(asset: asset, error: nil)
-//            let videoTrack = videoAsset.tracks(withMediaType: AVMediaType.video)[0]
-//            
-//            let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: nil) // NB: nil, should give you raw frames
-//            reader.add(readerOutput)
-//            reader.startReading()
-//            
-//            while true {
-//                let sampleBuffer = readerOutput.copyNextSampleBuffer()
-//                if sampleBuffer == nil {
-//                    break
-//                }
-//                if let pixelBuffer = sampleBuffer?.imageBuffer {
-//                    keyPointProcessingGroup.enter()
-//                    
-//                    let person = try processBuffer(pixelBuffer: pixelBuffer)
-//                    let frame: KPFrame = KPFrame(keyPoints: person.keyPoints, swinging: true, time: CMSampleBufferGetPresentationTimeStamp(sampleBuffer!))
-//                    frames.append(frame)
-//                }
-//            }
-//        }
-//    }
+    public func processVideo(videoURL: URL) throws -> [KPFrame] {
+        var frames = [KPFrame]()
+        
+        let videoAsset = AVAsset(url: videoURL)
+        
+        let keyPointProcessingGroup = DispatchGroup()
+        do {
+            let reader = try AVAssetReader(asset: videoAsset)
+            //AVAssetReader(asset: asset, error: nil)
+            let videoTrack = videoAsset.tracks(withMediaType: AVMediaType.video)[0]
+            
+            let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: nil) // NB: nil, should give you raw frames
+            reader.add(readerOutput)
+            reader.startReading()
+            
+            while true {
+                let sampleBuffer = readerOutput.copyNextSampleBuffer()
+                if sampleBuffer == nil {
+                    break
+                }
+                if let pixelBuffer = sampleBuffer?.imageBuffer {
+                    keyPointProcessingGroup.enter()
+                    
+                    let person = try processBuffer(pixelBuffer: pixelBuffer)
+                    let frame: KPFrame = KPFrame(keyPoints: person.keyPoints, swinging: true, time: Int(CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer!))*1000))
+                    frames.append(frame)
+                }
+            }
+        }
+        return frames
+    }
 }
