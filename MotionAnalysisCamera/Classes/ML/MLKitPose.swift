@@ -36,7 +36,7 @@ final class MLKitPose: PoseEstimator {
     }
     
     func mlkitPoseToKP3DPerson(pose: Pose) -> Person {
-        let kpts = [KeyPoint3D]()
+        var kpts = [KeyPoint3D]()
         for kp in pose.landmarks {
             let newKp = KeyPoint3D(coordinate: CGPoint(x: kp.position.x, y: kp.position.y), distance: kp.position.z)
             kpts.append(newKp)
