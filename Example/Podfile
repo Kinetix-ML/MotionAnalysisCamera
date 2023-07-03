@@ -4,6 +4,7 @@ platform :ios, '15.0'
 
 target 'MotionAnalysisCamera_Example' do
   pod 'TensorFlowLiteSwift', '~> 2.4.0', :subspecs => ['CoreML', 'Metal']
+  pod 'GoogleMLKit/PoseDetection', '3.2.0'
   pod 'KMLDataTypes', :git=> 'https://www.github.com/Kinetix-ML/KMLDataTypes'
   pod 'MotionAnalysisCamera', :path => '../'
 

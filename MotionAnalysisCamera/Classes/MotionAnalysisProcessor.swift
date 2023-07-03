@@ -10,13 +10,16 @@ import KMLDataTypes
 import AVFoundation
 public class MotionAnalysisProcessor {
     private var poseEstimator: PoseEstimator!
-    public init() {
+    public init(modelType: ModelType) {
         do {
-            poseEstimator = try MoveNet(
-                threadCount: 1,
-                delegate: .gpu,
-                modelType: .movenetLighting)
-            
+            if modelType == .pose3d {
+                poseEstimator = MLKitPose()
+            } else {
+                poseEstimator = try MoveNet(
+                    threadCount: 1,
+                    delegate: .gpu,
+                    modelType: .pose2d)
+            }
         } catch {
             print(error)
         }

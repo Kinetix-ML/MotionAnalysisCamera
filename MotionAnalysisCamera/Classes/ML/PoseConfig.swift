@@ -32,9 +32,8 @@ struct FileInfo {
 }
 
 /// Type of the pose estimation model to be used.
-enum ModelType: String, CaseIterable {
-  case posenet = "Posenet"
-  case movenetLighting = "Lightning"  // Movenet lightning
-  case movenetThunder = "Thunder"  // Movenet thunder
+public enum ModelType: String, CaseIterable {
+  case pose2d = "MoveNetLightning"  // Movenet lightning
+    case pose3d = "MLKitPose"
 }
 

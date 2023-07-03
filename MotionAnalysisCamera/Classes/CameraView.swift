@@ -48,13 +48,17 @@ public class CameraView: UIView {
     // init callback functions
     public var processFrame: (_ pts: [KeyPoint], _ imageSize: (CGFloat, CGFloat)) -> () = {pts,imageSize in print("Configure the Frame Processor")}
     
-    public func configureCamera() {
+    public func configureCamera(modelType: ModelType) {
         // load model
         do {
-            self.poseEstimator = try MoveNet(
-                threadCount: 1,
-                delegate: .gpu,
-                modelType: .movenetLighting)
+            if modelType == .pose3d {
+                self.poseEstimator = MLKitPose()
+            } else {
+                self.poseEstimator = try MoveNet(
+                    threadCount: 1,
+                    delegate: .gpu,
+                    modelType: .pose2d)
+            }
         } catch  {
             print(error)
         }

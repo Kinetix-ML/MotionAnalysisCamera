@@ -1,9 +1,74 @@
 PODS:
-  - KMLDataTypes (0.1.6)
-  - MotionAnalysisCamera (0.0.7):
+  - GoogleDataTransport (9.2.3):
+    - GoogleUtilities/Environment (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleMLKit/MLKitCore (3.2.0):
+    - MLKitCommon (~> 8.0.0)
+  - GoogleMLKit/PoseDetection (3.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitPoseDetection (~> 1.0.0-beta10)
+  - GoogleToolboxForMac/DebugUtils (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - GoogleToolboxForMac/Defines (2.3.2)
+  - GoogleToolboxForMac/Logger (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - "GoogleToolboxForMac/NSData+zlib (2.3.2)":
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.3.2)":
+    - GoogleToolboxForMac/DebugUtils (= 2.3.2)
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
+  - GoogleUtilities/Environment (7.11.1):
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/Logger (7.11.1):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/UserDefaults (7.11.1):
+    - GoogleUtilities/Logger
+  - GoogleUtilitiesComponents (1.1.0):
+    - GoogleUtilities/Logger
+  - GTMSessionFetcher/Core (1.7.2)
+  - KMLDataTypes (0.1.8)
+  - MLImage (1.0.0-beta3)
+  - MLKitCommon (8.0.0):
+    - GoogleDataTransport (~> 9.0)
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
+    - GoogleUtilities/UserDefaults (~> 7.0)
+    - GoogleUtilitiesComponents (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.12)
+  - MLKitPoseDetection (1.0.0-beta10):
+    - MLKitCommon (~> 8.0)
+    - MLKitPoseDetectionCommon (= 1.0.0-beta10)
+    - MLKitXenoCommon (= 1.0.0-beta10)
+  - MLKitPoseDetectionCommon (1.0.0-beta10):
+    - MLKitCommon (~> 8.0)
+    - MLKitXenoCommon (= 1.0.0-beta10)
+  - MLKitVision (4.2.0):
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - GTMSessionFetcher/Core (~> 1.1)
+    - MLImage (= 1.0.0-beta3)
+    - MLKitCommon (~> 8.0)
+    - Protobuf (~> 3.12)
+  - MLKitXenoCommon (1.0.0-beta10):
+    - MLKitCommon (~> 8.0)
+    - MLKitVision (~> 4.2)
+  - MotionAnalysisCamera (0.0.15):
+    - GoogleMLKit/PoseDetection (= 3.2.0)
     - KMLDataTypes
     - TensorFlowLiteSwift/CoreML (~> 2.4.0)
     - TensorFlowLiteSwift/Metal (~> 2.4.0)
+  - nanopb (2.30909.0):
+    - nanopb/decode (= 2.30909.0)
+    - nanopb/encode (= 2.30909.0)
+  - nanopb/decode (2.30909.0)
+  - nanopb/encode (2.30909.0)
+  - PromisesObjC (2.2.0)
+  - Protobuf (3.23.3)
   - TensorFlowLiteC (2.4.0):
     - TensorFlowLiteC/Core (= 2.4.0)
   - TensorFlowLiteC/Core (2.4.0)
@@ -21,6 +86,7 @@ PODS:
     - TensorFlowLiteSwift/Core (= 2.4.0)
 
 DEPENDENCIES:
+  - GoogleMLKit/PoseDetection (= 3.2.0)
   - KMLDataTypes (from `https://www.github.com/Kinetix-ML/KMLDataTypes`)
   - MotionAnalysisCamera (from `../`)
   - TensorFlowLiteSwift/CoreML (~> 2.4.0)
@@ -28,6 +94,21 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - GoogleDataTransport
+    - GoogleMLKit
+    - GoogleToolboxForMac
+    - GoogleUtilities
+    - GoogleUtilitiesComponents
+    - GTMSessionFetcher
+    - MLImage
+    - MLKitCommon
+    - MLKitPoseDetection
+    - MLKitPoseDetectionCommon
+    - MLKitVision
+    - MLKitXenoCommon
+    - nanopb
+    - PromisesObjC
+    - Protobuf
     - TensorFlowLiteC
     - TensorFlowLiteSwift
 
@@ -39,15 +120,30 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   KMLDataTypes:
-    :commit: df628f32cef89ff4c56102191ac770856eb72c58
+    :commit: 2ca761d6bad3085bbd0f7103c8a6e4fc5d78930e
     :git: https://www.github.com/Kinetix-ML/KMLDataTypes
 
 SPEC CHECKSUMS:
-  KMLDataTypes: 52c71b00f1d5c15f4abf5a0a0bf061f7d3428e53
-  MotionAnalysisCamera: f5fbfdb502dba84b36232d6efc0a4ce1f6b78c62
+  GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
+  GoogleMLKit: 0017a6a8372e1a182139b9def4d89be5d87ca5a7
+  GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
+  GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
+  GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
+  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
+  KMLDataTypes: be59ebfd89790cb12b451372247a667dc800e2c6
+  MLImage: 489dfec109f21da8621b28d476401aaf7a0d4ff4
+  MLKitCommon: f6da6c5659618c070b50a80db01248ebe2964175
+  MLKitPoseDetection: 619212a00d60dbd045900f351f5d536a29293209
+  MLKitPoseDetectionCommon: 440b2b41504319ff9855cd941f1e4606af069e8b
+  MLKitVision: 96c96571190b7f63eddf4a12068ce8a8689e0d2c
+  MLKitXenoCommon: 39b7097db51f4716a2a0ff4e4459e002499f5523
+  MotionAnalysisCamera: 943a42063e7285556b6dab93e5377c5eacab6510
+  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
+  PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
+  Protobuf: d9c3d7e5a3574aa6a5d521f2d9f733c76d294be8
   TensorFlowLiteC: 09f8ac75a76caeadb19bcfa694e97454cc1ecf87
   TensorFlowLiteSwift: f062dc1178120100d825d7799fd9f115b4a37fee
 
-PODFILE CHECKSUM: 6cbc973245372aaedecfbc076eb945a0bd8e787d
+PODFILE CHECKSUM: ea3d5f51edbd4c67469419edebf2682c54bb76db
 
 COCOAPODS: 1.12.1
