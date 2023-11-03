@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MotionAnalysisCamera'
-  s.version          = '0.23'
+  s.version          = '0.24'
   s.summary          = 'A camera API for high frame rate motion analysis using keypoint detection.'
 
 # This description is used to generate tags and improve search results.
@@ -46,6 +46,6 @@ the Motion Analysis Camera library combines high frame rate video capture with h
   s.dependency 'GoogleMLKit/PoseDetection', '3.2.0'
   s.dependency 'KMLDataTypes'
   s.static_framework = true
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386 arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386 arm64' }
 end
