@@ -57,7 +57,7 @@ PODS:
   - MLKitXenoCommon (1.0.0-beta10):
     - MLKitCommon (~> 8.0)
     - MLKitVision (~> 4.2)
-  - MotionAnalysisCamera (0.0.15):
+  - MotionAnalysisCamera (0.0.20):
     - GoogleMLKit/PoseDetection (= 3.2.0)
     - KMLDataTypes
     - TensorFlowLiteSwift/CoreML (~> 2.4.0)
@@ -137,7 +137,7 @@ SPEC CHECKSUMS:
   MLKitPoseDetectionCommon: 440b2b41504319ff9855cd941f1e4606af069e8b
   MLKitVision: 96c96571190b7f63eddf4a12068ce8a8689e0d2c
   MLKitXenoCommon: 39b7097db51f4716a2a0ff4e4459e002499f5523
-  MotionAnalysisCamera: 943a42063e7285556b6dab93e5377c5eacab6510
+  MotionAnalysisCamera: c44ec828480cb89e324e27532f0fc5d4a9dffbab
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   Protobuf: d9c3d7e5a3574aa6a5d521f2d9f733c76d294be8
@@ -146,4 +146,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ea3d5f51edbd4c67469419edebf2682c54bb76db
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.2

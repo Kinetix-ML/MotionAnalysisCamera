@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MotionAnalysisCamera'
-  s.version          = '0.0.20'
+  s.version          = ''
   s.summary          = 'A camera API for high frame rate motion analysis using keypoint detection.'
 
 # This description is used to generate tags and improve search results.
@@ -41,8 +41,8 @@ the Motion Analysis Camera library combines high frame rate video capture with h
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
-  s.dependency 'TensorFlowLiteSwift/CoreML', '~> 2.4.0'
-  s.dependency 'TensorFlowLiteSwift/Metal', '~> 2.4.0'
+  s.dependency 'TensorFlowLiteSwift/CoreML', '~> 2.10.0'
+  s.dependency 'TensorFlowLiteSwift/Metal', '~> 2.10.0'
   s.dependency 'GoogleMLKit/PoseDetection', '3.2.0'
   s.dependency 'KMLDataTypes'
   s.static_framework = true

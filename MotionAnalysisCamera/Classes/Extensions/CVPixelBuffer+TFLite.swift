@@ -223,4 +223,6 @@ extension CVPixelBuffer {
     let floats = bytes.map { (Float($0) - imageMean) / imageStd }
     return Data(copyingBufferOf: floats)
   }
+    
+    
 }

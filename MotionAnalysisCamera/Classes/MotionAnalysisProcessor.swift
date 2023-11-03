@@ -36,7 +36,6 @@ public class MotionAnalysisProcessor {
         let videoAsset = AVAsset(url: videoURL)
         
         let keyPointProcessingGroup = DispatchGroup()
-        do {
             let reader = try AVAssetReader(asset: videoAsset)
             //AVAssetReader(asset: asset, error: nil)
             let videoTrack = videoAsset.tracks(withMediaType: AVMediaType.video)[0]
@@ -58,7 +57,6 @@ public class MotionAnalysisProcessor {
                     frames.append(frame)
                 }
             }
-        }
         return frames
     }
 }

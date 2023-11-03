@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        cameraView?.configureCamera()
+        cameraView?.configureCamera(modelType: .pose2d)
         // Do any additional setup after loading the view, typically from a nib.
         
     }
