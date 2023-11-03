@@ -57,11 +57,11 @@ PODS:
   - MLKitXenoCommon (1.0.0-beta10):
     - MLKitCommon (~> 8.0)
     - MLKitVision (~> 4.2)
-  - MotionAnalysisCamera (0.0.20):
+  - MotionAnalysisCamera (0.22):
     - GoogleMLKit/PoseDetection (= 3.2.0)
     - KMLDataTypes
-    - TensorFlowLiteSwift/CoreML (~> 2.4.0)
-    - TensorFlowLiteSwift/Metal (~> 2.4.0)
+    - TensorFlowLiteSwift/CoreML (~> 2.10.0)
+    - TensorFlowLiteSwift/Metal (~> 2.10.0)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -69,28 +69,28 @@ PODS:
   - nanopb/encode (2.30909.0)
   - PromisesObjC (2.2.0)
   - Protobuf (3.23.3)
-  - TensorFlowLiteC (2.4.0):
-    - TensorFlowLiteC/Core (= 2.4.0)
-  - TensorFlowLiteC/Core (2.4.0)
-  - TensorFlowLiteC/CoreML (2.4.0):
+  - TensorFlowLiteC (2.10.0):
+    - TensorFlowLiteC/Core (= 2.10.0)
+  - TensorFlowLiteC/Core (2.10.0)
+  - TensorFlowLiteC/CoreML (2.10.0):
     - TensorFlowLiteC/Core
-  - TensorFlowLiteC/Metal (2.4.0):
+  - TensorFlowLiteC/Metal (2.10.0):
     - TensorFlowLiteC/Core
-  - TensorFlowLiteSwift/Core (2.4.0):
-    - TensorFlowLiteC (= 2.4.0)
-  - TensorFlowLiteSwift/CoreML (2.4.0):
-    - TensorFlowLiteC/CoreML (= 2.4.0)
-    - TensorFlowLiteSwift/Core (= 2.4.0)
-  - TensorFlowLiteSwift/Metal (2.4.0):
-    - TensorFlowLiteC/Metal (= 2.4.0)
-    - TensorFlowLiteSwift/Core (= 2.4.0)
+  - TensorFlowLiteSwift/Core (2.10.0):
+    - TensorFlowLiteC (= 2.10.0)
+  - TensorFlowLiteSwift/CoreML (2.10.0):
+    - TensorFlowLiteC/CoreML (= 2.10.0)
+    - TensorFlowLiteSwift/Core (= 2.10.0)
+  - TensorFlowLiteSwift/Metal (2.10.0):
+    - TensorFlowLiteC/Metal (= 2.10.0)
+    - TensorFlowLiteSwift/Core (= 2.10.0)
 
 DEPENDENCIES:
   - GoogleMLKit/PoseDetection (= 3.2.0)
   - KMLDataTypes (from `https://www.github.com/Kinetix-ML/KMLDataTypes`)
   - MotionAnalysisCamera (from `../`)
-  - TensorFlowLiteSwift/CoreML (~> 2.4.0)
-  - TensorFlowLiteSwift/Metal (~> 2.4.0)
+  - TensorFlowLiteSwift/CoreML (~> 2.10.0)
+  - TensorFlowLiteSwift/Metal (~> 2.10.0)
 
 SPEC REPOS:
   trunk:
@@ -137,13 +137,13 @@ SPEC CHECKSUMS:
   MLKitPoseDetectionCommon: 440b2b41504319ff9855cd941f1e4606af069e8b
   MLKitVision: 96c96571190b7f63eddf4a12068ce8a8689e0d2c
   MLKitXenoCommon: 39b7097db51f4716a2a0ff4e4459e002499f5523
-  MotionAnalysisCamera: c44ec828480cb89e324e27532f0fc5d4a9dffbab
+  MotionAnalysisCamera: 58a83152726a2389b2bef7fd06b5ef10e8bb0777
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   Protobuf: d9c3d7e5a3574aa6a5d521f2d9f733c76d294be8
-  TensorFlowLiteC: 09f8ac75a76caeadb19bcfa694e97454cc1ecf87
-  TensorFlowLiteSwift: f062dc1178120100d825d7799fd9f115b4a37fee
+  TensorFlowLiteC: edf19548f50a1552e43dbd6906f5618a478bd038
+  TensorFlowLiteSwift: fc26e0e9d63c8a98ff61187457635e660d787561
 
-PODFILE CHECKSUM: ea3d5f51edbd4c67469419edebf2682c54bb76db
+PODFILE CHECKSUM: 34b00e4e82396dffd0b362aed637e3dda6483453
 
 COCOAPODS: 1.14.2
