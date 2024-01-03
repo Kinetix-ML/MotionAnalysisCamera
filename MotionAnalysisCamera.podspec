@@ -26,7 +26,7 @@ the Motion Analysis Camera library combines high frame rate video capture with h
   s.license          = { :type => 'GPLv3', :file => 'LICENSE' }
   s.author           = { 'MadeWithStone' => 'maxwell@kinetixml.com' }
   s.source           = { :git => 'https://github.com/Kinetix-ML/MotionAnalysisCamera.git', :tag => s.version.to_s }
-  s.social_media_url = 'https://twitter.com/@madewithstone'
+  s.social_media_url = 'https://x.com/@madewithstone'
 
   s.ios.deployment_target = '15.0'
   s.swift_version = '5.8'
