@@ -27,6 +27,8 @@ public class CameraView: UIView {
     // init logic objects
     private var pts: Person?
     private var time0 = (Date().timeIntervalSince1970*1000.0).rounded()
+    private var frameCount = 0
+    private var frameTime: CMTime = .zero
     public var collecting = false
     
     // init threading objects
@@ -46,7 +48,7 @@ public class CameraView: UIView {
     private var framesPerSecond = 240
     
     // init callback functions
-    public var processFrame: (_ pts: [KeyPoint], _ imageSize: (CGFloat, CGFloat)) -> () = {pts,imageSize in print("Configure the Frame Processor")}
+    public var processFrame: (_ pts: [KeyPoint], _ imageSize: (CGFloat, CGFloat)) -> () = {pts,imageSize in return}
     
     public func configureCamera(modelType: ModelType) {
         // load model
@@ -66,11 +68,16 @@ public class CameraView: UIView {
         // start camera feed
         cameraFeedManager = CameraFeedManager(preview: self)
         cameraFeedManager.startRunning()
+        cameraFeedManager.changeCamera()
         cameraFeedManager.delegate = self
     }
     
     public func startRecording() {
         self.assetWriter = nil
+        self.assetStartTime = Date().timeIntervalSince1970
+        self.frameTime = .zero
+        framesPerSecond = cameraFeedManager.getFPS()
+        self.setupVideoWriter()
         self.collecting = true
     }
     
@@ -91,9 +98,9 @@ public class CameraView: UIView {
     }
     
     
-    func setupVideoWriter(pixelbuffer: CVPixelBuffer) {
+    func setupVideoWriter() {
         print("[MotionAnalysisCamera] Setting up Video Asset Writer")
-        let assetWriterSettings = [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey : pixelbuffer.size.width, AVVideoHeightKey: pixelbuffer.size.height] as [String : Any]
+        //let assetWriterSettings = [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey : pb!.size.width, AVVideoHeightKey: pb!.size.height] as [String : Any]
         //generate a file url to store the video. some_image.jpg becomes some_image.mov
         let imageNameRoot = "\(Date().ISO8601Format())"
         if let outputMovieURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(imageNameRoot).mov") {
@@ -111,10 +118,10 @@ public class CameraView: UIView {
             //generate 1080p settings
             var settingsAssistant = AVOutputSettingsAssistant(preset: .preset960x540)?.videoSettings
             settingsAssistant!["AVVideoHeightKey"] = 960
-            settingsAssistant!["AVVideoWidthKey"] = pixelbuffer.size.height
+            settingsAssistant!["AVVideoWidthKey"] = 540
             
             //create a single video input
-            assetWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: assetWriterSettings)
+            assetWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: settingsAssistant)
             assetWriterInput!.expectsMediaDataInRealTime = true
 
             //create an adaptor for the pixel buffer
@@ -130,18 +137,17 @@ public class CameraView: UIView {
     }
     
     func writeFrameToSess(pixelBuffer: CVPixelBuffer, frameTime: CMTime) {
-        DispatchQueue.main.async {
             if self.assetWriterInput != nil && self.assetWriterInput!.isReadyForMoreMediaData {
                 // append the contents of the pixelBuffer at the correct time
                 self.assetWriterAdaptor!.append(pixelBuffer, withPresentationTime: frameTime)
             }
-        }
+        
     }
     
     func endFrameWriter(completion: @escaping () -> Void) {
         if assetWriter != nil && assetWriterInput != nil && assetWriter?.status == .writing {
             assetWriterInput!.markAsFinished()
-            DispatchQueue.main.async {
+            frameWriterQueue.async {
                 self.assetWriter?.finishWriting {
                     completion()
                 }
@@ -159,17 +165,32 @@ extension CameraView: CameraFeedManagerDelegate {
         _ cameraFeedManager: CameraFeedManager, didOutput pixelBuffer: CVPixelBuffer
     ) {
         let image = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer))
+        frameWriterQueue.async {
+            if self.collecting {
+                if self.assetWriter == nil {
+                    self.setupVideoWriter()
+                    self.assetStartTime = Date().timeIntervalSince1970
+                }
+                if self.assetWriter != nil {
+                    let newFrameTime = (Date().timeIntervalSince1970 - self.assetStartTime!)*Double(self.framesPerSecond)
+                    self.writeFrameToSess(pixelBuffer: pixelBuffer, frameTime: self.frameTime)
+                    self.frameTime = CMTimeAdd(CMTime(value: 1, timescale: CMTimeScale(self.framesPerSecond)), self.frameTime)
+                    
+                }
+            }
+        }
         DispatchQueue.main.async {
             //self.overlayView.image = image
             self.drawShape(image: image, person: self.pts)
             self.runModel(pixelBuffer, image)
         }
-        
     }
     
     
     /// Run pose estimation on the input frame from the camera.
     public func runModel(_ pixelBuffer: CVPixelBuffer, _ image: UIImage) {
+        
+        
         // Guard to make sure that there's only 1 frame process at each moment.
         guard !isRunning else { return }
         
@@ -179,24 +200,13 @@ extension CameraView: CameraFeedManagerDelegate {
         // Run inference on a serial queue to avoid race condition.
         queue.async {
             self.isRunning = true
-            if self.collecting {
-                if self.assetWriter == nil {
-                    self.setupVideoWriter(pixelbuffer: pixelBuffer)
-                    self.assetStartTime = Date().timeIntervalSince1970
-                }
-                if self.assetWriter != nil {
-                    let newFrameTime = (Date().timeIntervalSince1970 - self.assetStartTime!)*Double(self.framesPerSecond)
-                    self.writeFrameToSess(pixelBuffer: pixelBuffer, frameTime: CMTimeMake(value: Int64(round(newFrameTime)), timescale: Int32(self.framesPerSecond)))
-                    
-                }
-            }
-            defer { self.isRunning = false }
             
             // Run pose estimation
             do {
                 
                 let (result, _) = try estimator.estimateSinglePose(
                     on: pixelBuffer)
+                self.isRunning = false
                 self.frameMiscQueue.async {
                     // If score is too low, clear result remaining in the overlayView.
                     if result.score < self.minimumScore {

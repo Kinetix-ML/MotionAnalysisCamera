@@ -19,19 +19,19 @@ import UIKit
 
 /// Delegate to receive the frames captured from the device's camera.
 public protocol CameraFeedManagerDelegate: AnyObject {
-
-  /// Callback method that receives frames from the camera.
-  /// - Parameters:
-  ///     - cameraFeedManager: The CameraFeedManager instance which calls the delegate.
-  ///     - pixelBuffer: The frame received from the camera.
-  func cameraFeedManager(
-    _ cameraFeedManager: CameraFeedManager, didOutput pixelBuffer: CVPixelBuffer)
+    
+    /// Callback method that receives frames from the camera.
+    /// - Parameters:
+    ///     - cameraFeedManager: The CameraFeedManager instance which calls the delegate.
+    ///     - pixelBuffer: The frame received from the camera.
+    func cameraFeedManager(
+        _ cameraFeedManager: CameraFeedManager, didOutput pixelBuffer: CVPixelBuffer)
 }
 
 /// Manage the camera pipeline.
 public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
-
-  /// Delegate to receive the frames captured by the device's camera.
+    
+    /// Delegate to receive the frames captured by the device's camera.
     public var delegate: CameraFeedManagerDelegate?
     public var input: AVCaptureDeviceInput?
     public var zoom = 0 // 0: 0.5x, 1: 1x, 2: 2x
@@ -45,81 +45,82 @@ public final class CameraFeedManager: NSObject, AVCaptureVideoDataOutputSampleBu
     public var frontCameraUltra: AVCaptureDevice?
     public var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     public let videoOutput = AVCaptureVideoDataOutput()
+    public var fps = 0
     public var preview: UIView!
-
-    init(preview: UIView) {
-    super.init()
-        self.preview = preview
-
-    configureSession()
-  }
-
-  /// Start capturing frames from the camera.
-public func startRunning() {
-    DispatchQueue.global(qos: .background).async {
-        self.captureSession.startRunning()
-    }
-  }
-
-  /// Stop capturing frames from the camera.
-    public func stopRunning() {
-    captureSession.stopRunning()
-  }
-
-    public let captureSession = AVCaptureSession()
-
-  /// Initialize the capture session.
-  private func configureSession() {
-      captureSession.sessionPreset = AVCaptureSession.Preset.hd1280x720
-      do {
-        /*backCamera = AVCaptureDevice.default(
-                .builtInWideAngleCamera, for: .video, position: .back)!
-          frontCamera = AVCaptureDevice.default(
-              .builtInWideAngleCamera, for: .video, position: .front)!*/
-          print("Back Camera Options: \(getCameraOptions(position: .back))")
-          let backOptions = getCameraOptions(position: .back)
-          let frontOptions = getCameraOptions(position: .front)
-
-          backCamera = backOptions[0]
-          frontCamera = frontOptions[0]
-          
-          backZoomOptions = [backCamera!.minAvailableVideoZoomFactor, 2.0, 3.0]
-          frontZoomOptions = [frontCamera!.minAvailableVideoZoomFactor, 2.0, 3.0]
-          print("Back Zoom Options: \(backZoomOptions)")
-          input = try AVCaptureDeviceInput(device: backCamera!)
-          updateZoomLabel()
-          captureSession.addInput(input!)
-    } catch {
-      return
-    }
-      
-      //configureCameraForHighestFrameRate(device: input!.device)
-
     
-    videoOutput.videoSettings = [
-      (kCVPixelBufferPixelFormatTypeKey as String): NSNumber(value: kCVPixelFormatType_32BGRA)
-    ]
-    videoOutput.alwaysDiscardsLateVideoFrames = true
-    let dataOutputQueue = DispatchQueue(
-      label: "video data queue",
-      qos: .userInitiated,
-      attributes: [],
-      autoreleaseFrequency: .workItem)
-    if captureSession.canAddOutput(videoOutput) {
-      captureSession.addOutput(videoOutput)
-      videoOutput.connection(with: .video)?.videoOrientation = .portrait
-        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        videoPreviewLayer?.videoGravity = .resizeAspect
-        videoPreviewLayer?.connection?.videoOrientation = .portrait
+    init(preview: UIView) {
+        super.init()
+        self.preview = preview
         
-            preview.layer.addSublayer(videoPreviewLayer!)
-        DispatchQueue.global(qos: .userInitiated).async { //[weak self] in
+        configureSession()
+    }
+    
+    /// Start capturing frames from the camera.
+    public func startRunning() {
+        DispatchQueue.global(qos: .background).async {
             self.captureSession.startRunning()
-            self.configureCameraForHighestFrameRate(device: self.input!.device)
         }
     }
-    videoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
-  }
+    
+    /// Stop capturing frames from the camera.
+    public func stopRunning() {
+        captureSession.stopRunning()
+    }
+    
+    public let captureSession = AVCaptureSession()
+    
+    /// Initialize the capture session.
+    private func configureSession() {
+        captureSession.sessionPreset = AVCaptureSession.Preset.hd1280x720
+        do {
+            /*backCamera = AVCaptureDevice.default(
+             .builtInWideAngleCamera, for: .video, position: .back)!
+             frontCamera = AVCaptureDevice.default(
+             .builtInWideAngleCamera, for: .video, position: .front)!*/
+            //print("Back Camera Options: \(getCameraOptions(position: .back))")
+            let backOptions = getCameraOptions(position: .back)
+            let frontOptions = getCameraOptions(position: .front)
+            
+            backCamera = backOptions[0]
+            frontCamera = frontOptions[0]
+            
+            backZoomOptions = [backCamera!.minAvailableVideoZoomFactor, 2.0, 3.0]
+            frontZoomOptions = [frontCamera!.minAvailableVideoZoomFactor, 2.0, 3.0]
+            //print("Back Zoom Options: \(backZoomOptions)")
+            input = try AVCaptureDeviceInput(device: backCamera!)
+            updateZoomLabel()
+            captureSession.addInput(input!)
+        } catch {
+            return
+        }
+        
+        //configureCameraForHighestFrameRate(device: input!.device)
+        
+        
+        videoOutput.videoSettings = [
+            (kCVPixelBufferPixelFormatTypeKey as String): NSNumber(value: kCVPixelFormatType_32BGRA)
+        ]
+        videoOutput.alwaysDiscardsLateVideoFrames = true
+        let dataOutputQueue = DispatchQueue(
+            label: "video data queue",
+            qos: .userInitiated,
+            attributes: [],
+            autoreleaseFrequency: .workItem)
+        if captureSession.canAddOutput(videoOutput) {
+            captureSession.addOutput(videoOutput)
+            videoOutput.connection(with: .video)?.videoOrientation = .portrait
+            videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+            videoPreviewLayer?.videoGravity = .resizeAspect
+            videoPreviewLayer?.connection?.videoOrientation = .portrait
+            
+            preview.layer.addSublayer(videoPreviewLayer!)
+            DispatchQueue.global(qos: .userInitiated).async { //[weak self] in
+                self.captureSession.startRunning()
+                self.configureCameraForHighestFrameRate(device: self.input!.device)
+            }
+        }
+        videoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
+    }
     
     func configureCameraForHighestFrameRate(device: AVCaptureDevice) {
         var bestFormat: AVCaptureDevice.Format? = nil
@@ -145,7 +146,7 @@ public func startRunning() {
                 }
             }
         }
-
+        
         if (bestFormat == nil) {
             print("Es gibt keine Formate, die Apokalypse ist ausgebrochen.")
             return;
@@ -153,7 +154,7 @@ public func startRunning() {
             print("Es gibt keine Bilder, die Apokalypse ist ausgebrochen.")
             return;
         }
-
+        
         let Richtig = bestFormat!
         let fps = bestFrameRateRange!
         do {
@@ -167,7 +168,12 @@ public func startRunning() {
         device.activeFormat = Richtig
         device.activeVideoMinFrameDuration = fps.minFrameDuration
         device.activeVideoMaxFrameDuration = fps.minFrameDuration
+        self.fps = Int(round(fps.maxFrameRate))
         device.unlockForConfiguration()
+    }
+    
+    public func getFPS() -> Int {
+        return self.fps
     }
     
     public func changeCamera() {
@@ -213,10 +219,10 @@ public func startRunning() {
     func getCameraOptions(position: AVCaptureDevice.Position) -> [AVCaptureDevice] {
         let deviceTypes: [AVCaptureDevice.DeviceType] = [AVCaptureDevice.DeviceType.builtInWideAngleCamera]
         
-                let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: deviceTypes, mediaType: AVMediaType.video, position: position)
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: deviceTypes, mediaType: AVMediaType.video, position: position)
         return discoverySession.devices
-                    
-                
+        
+        
     }
     
     public func updateZoomLabel() {
@@ -226,26 +232,26 @@ public func startRunning() {
             zoomBtnText = "\(backZoomOptions[zoom])"
         }
     }
-
-  // MARK: Methods of the AVCaptureVideoDataOutputSampleBufferDelegate
+    
+    // MARK: Methods of the AVCaptureVideoDataOutputSampleBufferDelegate
     public func captureOutput(
-    _ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
-    from connection: AVCaptureConnection
-  ) {
-    guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-      return
+        _ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
+        from connection: AVCaptureConnection
+    ) {
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            return
+        }
+        DispatchQueue.main.async {
+            if self.videoPreviewLayer?.frame.height == 0 {
+                let bounds = self.preview.bounds
+                let width = (pixelBuffer.size.width/pixelBuffer.size.height)*bounds.height
+                let x = (bounds.width-width)/2
+                let frame = CGRect(x: x, y: 0, width: width, height: bounds.height)
+                self.videoPreviewLayer?.frame = frame
+            }
+        }
+        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags.readOnly)
+        delegate?.cameraFeedManager(self, didOutput: pixelBuffer)
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags.readOnly)
     }
-      DispatchQueue.main.async {
-          if self.videoPreviewLayer?.frame.height == 0 {
-              let bounds = self.preview.bounds
-              let width = (pixelBuffer.size.width/pixelBuffer.size.height)*bounds.height
-              let x = (bounds.width-width)/2
-              let frame = CGRect(x: x, y: 0, width: width, height: bounds.height)
-              self.videoPreviewLayer?.frame = frame
-          }
-      }
-    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags.readOnly)
-    delegate?.cameraFeedManager(self, didOutput: pixelBuffer)
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags.readOnly)
-  }
 }
