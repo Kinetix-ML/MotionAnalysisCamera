@@ -47,6 +47,7 @@ the Motion Analysis Camera library combines high frame rate video capture with h
   s.dependency 'KMLDataTypes'
   s.static_framework = true
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.pod_target_xcconfig = { 'ONLY_ACTIVE_ARCH' => 'NO' }
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 end
 
