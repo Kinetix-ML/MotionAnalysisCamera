@@ -68,16 +68,16 @@ public class CameraView: UIView {
         // start camera feed
         cameraFeedManager = CameraFeedManager(preview: self)
         cameraFeedManager.startRunning()
-        cameraFeedManager.changeCamera()
+        setupVideoWriter()
         cameraFeedManager.delegate = self
     }
     
     public func startRecording() {
-        self.assetWriter = nil
+        //self.assetWriter = nil
         self.assetStartTime = Date().timeIntervalSince1970
         self.frameTime = .zero
         framesPerSecond = cameraFeedManager.getFPS()
-        self.setupVideoWriter()
+        //self.setupVideoWriter()
         self.collecting = true
     }
     
@@ -85,6 +85,7 @@ public class CameraView: UIView {
     public func endRecording(completion: @escaping (URL) -> Void) {
         self.collecting = false
         endFrameWriter() {
+            self.setupVideoWriter()
             completion(self.outputURL)
         }
     }
